@@ -5,7 +5,7 @@ module Piggie
     attr_reader :agent, :bank_details, :routing_number
 
     def self.find(routing_number)
-      new(routing_number).find
+      new(routing_number).tap(&:find)
     end
 
     def initialize(routing_number)
@@ -18,7 +18,11 @@ module Piggie
     def find
       agree_to_terms
       search_for_routing_number
-      get_bank_details
+      @bank_details = get_bank_details
+    end
+
+    def valid?
+      bank_details.key?("name")
     end
 
     private
@@ -58,12 +62,12 @@ module Piggie
 
     def get_bank_details
       detail_link = @current_page.links.find { |link| link.text.gsub(/\D/, "") == routing_number }
-      if detail_link
-        @current_page = agent.click(detail_link)
-        @bank_details = (@current_page / "li[id]").each_with_object({}) do |e, h|
-          e.at_css('strong').remove
-          h[e.attr(:id).delete_prefix("detail_")] = e.text.strip
-        end
+      return {} unless detail_link
+
+      @current_page = agent.click(detail_link)
+      (@current_page / "li[id]").each_with_object({}) do |e, h|
+        e.at_css('strong').remove
+        h[e.attr(:id).delete_prefix("detail_")] = e.text.strip
       end
     end
   end
