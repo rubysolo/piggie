@@ -31,7 +31,7 @@ GEM
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     ntlm-http (0.1.1)
-    rake (10.5.0)
+    rake (13.0.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
@@ -43,7 +43,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.16)
   piggie!
-  rake (~> 10.0)
+  rake (~> 13.0)
 
 BUNDLED WITH
    1.17.1
